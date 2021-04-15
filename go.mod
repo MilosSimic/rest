@@ -1,4 +1,4 @@
-module example.com
+module github.com/milossimic/rest
 
 go 1.15
 

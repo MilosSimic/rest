@@ -1,7 +1,8 @@
 package main
 
 import (
-	ps "example.com/internal/poststore"
+	ps "github.com/milossimic/rest/poststore"
+	tracer "github.com/milossimic/rest/tracer"
 	opentracing "github.com/opentracing/opentracing-go"
 	"io"
 )
@@ -20,7 +21,8 @@ func NewPostServer() (*postServer, error) {
 		return nil, err
 	}
 
-	tracer, closer := Init(name)
+	tracer, closer := tracer.Init(name)
+	opentracing.SetGlobalTracer(tracer)
 	return &postServer{
 		store:  store,
 		tracer: tracer,

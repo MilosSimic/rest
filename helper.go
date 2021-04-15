@@ -3,13 +3,14 @@ package main
 import (
 	"context"
 	"encoding/json"
+	tracer "github.com/milossimic/rest/tracer"
 	"io"
 	"net/http"
 )
 
 // renderJSON renders 'v' as JSON and writes it as a response into w.
 func renderJSON(ctx context.Context, w http.ResponseWriter, v interface{}) {
-	span := StartSpanFromContext(ctx, "renderJSON")
+	span := tracer.StartSpanFromContext(ctx, "renderJSON")
 	defer span.Finish()
 
 	js, err := json.Marshal(v)
@@ -22,7 +23,7 @@ func renderJSON(ctx context.Context, w http.ResponseWriter, v interface{}) {
 }
 
 func decodeBody(ctx context.Context, r io.Reader) (*RequestPost, error) {
-	span := StartSpanFromContext(ctx, "decodeBody")
+	span := tracer.StartSpanFromContext(ctx, "decodeBody")
 	defer span.Finish()
 
 	dec := json.NewDecoder(r)

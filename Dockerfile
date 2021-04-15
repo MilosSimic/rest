@@ -31,7 +31,7 @@ WORKDIR /root/
 
 # Copy the Pre-built binary file from the previous stage
 COPY --from=builder /app/main .
-COPY --from=builder /app/wait_for_postgres.sh
+#COPY --from=builder /app/wait_for_postgres.sh
 
 # Command to run the executable
-# CMD ["./main"]
+CMD ["./main"]

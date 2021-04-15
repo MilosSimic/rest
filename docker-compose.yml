@@ -24,6 +24,12 @@ services:
     build: .
     restart: always
     environment:
+      - JAEGER_SERVICE_NAME=posts
+      - JAEGER_AGENT_HOST=tracing
+      - JAEGER_AGENT_PORT=6831     
+      - JAEGER_SAMPLER_MANAGER_HOST_PORT=jaeger:5778
+      - JAEGER_SAMPLER_TYPE=const
+      - JAEGER_SAMPLER_PARAM=1
       - DBHOST=db
       - USER=postgres
       - PASSWORD=postgres

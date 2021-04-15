@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"github.com/gorilla/mux"
-	opentracing "github.com/opentracing/opentracing-go"
 	"log"
 	"net/http"
 )
@@ -18,7 +17,6 @@ func main() {
 	}
 
 	defer server.GetCloser()
-	opentracing.SetGlobalTracer(server.GetTracer())
 
 	router.HandleFunc("/post/", server.createPostHandler).Methods("POST")
 	router.HandleFunc("/post/", server.getAllPostsHandler).Methods("GET")
