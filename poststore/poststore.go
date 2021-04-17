@@ -88,3 +88,13 @@ func (ts *PostStore) GetAllPosts(ctx context.Context) []Post {
 
 	return posts
 }
+
+func (ts *PostStore) Close() error {
+	db, err := ts.db.DB()
+	if err != nil {
+		return err
+	}
+
+	db.Close()
+	return nil
+}

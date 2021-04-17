@@ -37,3 +37,11 @@ func (s *postServer) GetTracer() opentracing.Tracer {
 func (s *postServer) GetCloser() io.Closer {
 	return s.closer
 }
+
+func (s *postServer) CloseTracer() error {
+	return s.closer.Close()
+}
+
+func (s *postServer) CloseDB() error {
+	return s.store.Close()
+}
