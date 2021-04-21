@@ -1,13 +1,15 @@
 package tracer
 
 import (
+	"context"
 	"fmt"
 	opentracing "github.com/opentracing/opentracing-go"
 	"github.com/opentracing/opentracing-go/ext"
+	"github.com/opentracing/opentracing-go/log"
 	"github.com/uber/jaeger-client-go"
 	"github.com/uber/jaeger-client-go/config"
-	// "github.com/uber/jaeger-lib/metrics"
-	"context"
+	jaegerlog "github.com/uber/jaeger-client-go/log"
+	"github.com/uber/jaeger-lib/metrics"
 	"io"
 	"net/http"
 )
@@ -40,7 +42,12 @@ func Init(service string) (opentracing.Tracer, io.Closer) {
 	// 		LogSpans: true,
 	// 	},
 	// }
-	tracer, closer, err := cfg.NewTracer(config.Logger(jaeger.StdLogger))
+	jLogger := jaegerlog.StdLogger
+	jMetricsFactory := metrics.NullFactory
+	tracer, closer, err := cfg.NewTracer(
+		config.Logger(jLogger),
+		config.Metrics(jMetricsFactory),
+	)
 	if err != nil {
 		panic(fmt.Sprintf("ERROR: cannot init Jaeger: %v\n", err))
 	}
@@ -78,4 +85,12 @@ func StartSpanFromContext(ctx context.Context, spanName string) opentracing.Span
 
 func ContextWithSpan(ctx context.Context, span opentracing.Span) context.Context {
 	return opentracing.ContextWithSpan(ctx, span)
+}
+
+func LogString(key string, value string) log.Field {
+	return log.String(key, value)
+}
+
+func LogError(span opentracing.Span, err error, fields ...log.Field) {
+	ext.LogError(span, err, fields...)
 }
