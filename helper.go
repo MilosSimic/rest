@@ -15,6 +15,7 @@ func renderJSON(ctx context.Context, w http.ResponseWriter, v interface{}) {
 
 	js, err := json.Marshal(v)
 	if err != nil {
+		tracer.LogError(span, err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -30,6 +31,7 @@ func decodeBody(ctx context.Context, r io.Reader) (*RequestPost, error) {
 	dec.DisallowUnknownFields()
 	var rt RequestPost
 	if err := dec.Decode(&rt); err != nil {
+		tracer.LogError(span, err)
 		return nil, err
 	}
 	return &rt, nil

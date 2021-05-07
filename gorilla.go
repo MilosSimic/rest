@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"github.com/gorilla/mux"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"log"
 	"net/http"
 	"os"
@@ -29,6 +30,7 @@ func main() {
 	router.HandleFunc("/post/", server.getAllPostsHandler).Methods("GET")
 	router.HandleFunc("/post/{id:[0-9]+}/", server.getPostHandler).Methods("GET")
 	router.HandleFunc("/post/{id:[0-9]+}/", server.deletePostHandler).Methods("DELETE")
+	router.Path("/metrics").Handler(promhttp.Handler())
 
 	// start server
 	srv := &http.Server{Addr: "0.0.0.0:8000", Handler: router}

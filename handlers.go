@@ -34,7 +34,6 @@ func (ts *postServer) createPostHandler(w http.ResponseWriter, req *http.Request
 	ctx := tracer.ContextWithSpan(context.Background(), span)
 	rt, err := decodeBody(ctx, req.Body)
 	if err != nil {
-		tracer.LogError(span, err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
@@ -67,9 +66,7 @@ func (ts *postServer) getPostHandler(w http.ResponseWriter, req *http.Request) {
 	ctx := tracer.ContextWithSpan(context.Background(), span)
 	id, _ := strconv.Atoi(mux.Vars(req)["id"])
 	task, err := ts.store.GetPost(ctx, id)
-
 	if err != nil {
-		tracer.LogError(span, err)
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return
 	}
@@ -88,9 +85,7 @@ func (ts *postServer) deletePostHandler(w http.ResponseWriter, req *http.Request
 	ctx := tracer.ContextWithSpan(context.Background(), span)
 	id, _ := strconv.Atoi(mux.Vars(req)["id"])
 	err := ts.store.DeletePost(ctx, id)
-
 	if err != nil {
-		tracer.LogError(span, err)
 		http.Error(w, err.Error(), http.StatusNotFound)
 	}
 }

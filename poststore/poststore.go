@@ -63,7 +63,9 @@ func (ts *PostStore) GetPost(ctx context.Context, id int) (Post, error) {
 		return post, nil
 	}
 
-	return Post{}, fmt.Errorf("post with id=%d not found", id)
+	err := fmt.Errorf("post with id=%d not found", id)
+	tracer.LogError(span, err)
+	return Post{}, err
 }
 
 func (ts *PostStore) DeletePost(ctx context.Context, id int) error {
@@ -75,7 +77,9 @@ func (ts *PostStore) DeletePost(ctx context.Context, id int) error {
 		return nil
 	}
 
-	return fmt.Errorf("post with id=%d not found", id)
+	err := fmt.Errorf("post with id=%d not found", id)
+	tracer.LogError(span, err)
+	return err
 }
 
 // GetAllTasks returns all the tasks in the store, in arbitrary order.

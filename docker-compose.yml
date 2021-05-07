@@ -41,5 +41,13 @@ services:
       - "8000:8000"
     depends_on:
       - db
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - '9090:9090'
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - ./prometheus-data:/prometheus
 volumes:
   pgdata:
+  prometheus-data:
