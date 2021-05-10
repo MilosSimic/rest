@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"github.com/gorilla/mux"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"log"
 	"net/http"
 	"os"
@@ -26,11 +25,11 @@ func main() {
 	defer server.CloseTracer()
 	defer server.CloseDB()
 
-	router.HandleFunc("/post/", server.createPostHandler).Methods("POST")
-	router.HandleFunc("/post/", server.getAllPostsHandler).Methods("GET")
-	router.HandleFunc("/post/{id:[0-9]+}/", server.getPostHandler).Methods("GET")
-	router.HandleFunc("/post/{id:[0-9]+}/", server.deletePostHandler).Methods("DELETE")
-	router.Path("/metrics").Handler(promhttp.Handler())
+	router.HandleFunc("/post/", count(server.createPostHandler)).Methods("POST")
+	router.HandleFunc("/post/", count(server.getAllPostsHandler)).Methods("GET")
+	router.HandleFunc("/post/{id:[0-9]+}/", count(server.getPostHandler)).Methods("GET")
+	router.HandleFunc("/post/{id:[0-9]+}/", count(server.deletePostHandler)).Methods("DELETE")
+	router.Path("/metrics").Handler(metricsHandler())
 
 	// start server
 	srv := &http.Server{Addr: "0.0.0.0:8000", Handler: router}
